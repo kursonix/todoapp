@@ -1,21 +1,37 @@
 import { observer } from "mobx-react-lite"
-import React, {
-  FC,
-} from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import React, { FC } from "react"
+import { Alert, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import {
-  Text,
-} from "../components"
+import { Button, Text } from "../components"
+import useGoogleAuthentication from "../hooks/useGoogleAuthentication"
 import { isRTL } from "../i18n"
+import { AppStackScreenProps } from "../navigators"
+import { authenticationService } from "../services/firebase/authenticationService"
 import { colors, spacing } from "../theme"
+import type { AuthCredential } from "@firebase/auth"
 
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
 
+interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
-) {
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen() {
+  const [googleAuthLoading, authWithGoogle] = useGoogleAuthentication()
+
+  async function login(credential: AuthCredential, data?: any) {
+    const user = await authenticationService.loginWithCredential(credential, data)
+    console.log(user)
+  }
+
+  async function loginWithGoogle() {
+    try {
+      const [credential] = await authWithGoogle()
+      await login(credential)
+    } catch (error: any) {
+      console.error(error)
+      Alert.alert("Error", "Something went wrong. Please try again later.")
+    }
+  }
 
   return (
     <View style={$container}>
@@ -32,9 +48,9 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       </View>
 
       <SafeAreaView style={$bottomContainer} edges={["bottom"]}>
-        <View style={$bottomContentContainer}>
-          <Text tx="welcomeScreen.postscript" size="md" />
-        </View>
+        <Button style={$button} onPress={loginWithGoogle}>
+          Zaloguj
+        </Button>
       </SafeAreaView>
     </View>
   )
@@ -57,9 +73,12 @@ const $bottomContainer: ViewStyle = {
   flexShrink: 1,
   flexGrow: 0,
   flexBasis: "43%",
+  justifyContent: "flex-end",
   backgroundColor: colors.palette.neutral100,
   borderTopLeftRadius: 16,
   borderTopRightRadius: 16,
+  paddingHorizontal: spacing.large,
+  paddingBottom: spacing.large,
 }
 
 const $bottomContentContainer: ViewStyle = {
@@ -86,3 +105,5 @@ const $welcomeFace: ImageStyle = {
 const $welcomeHeading: TextStyle = {
   marginBottom: spacing.medium,
 }
+
+const $button: ViewStyle = {}

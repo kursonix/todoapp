@@ -3,6 +3,7 @@
   "displayName": "ToDoApp",
   "expo": {
     "name": "ToDoApp",
+    "owner": "proactivebit",
     "slug": "ToDoApp",
     "version": "1.0.0",
     "orientation": "portrait",
