@@ -1,34 +1,134 @@
-import React, { FC } from "react"
+import React, { FC, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { FlatList, View, ViewStyle, Image, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text } from "../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../models"
+import { Button, ButtonAccessoryProps, Icon, Screen, Text } from "../components"
+import { DrawerLayout, DrawerState } from "react-native-gesture-handler"
+import * as Localization from "expo-localization"
+import { colors, spacing } from "../theme"
+import { useSharedValue } from "react-native-reanimated"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { DrawerIconButton } from "../components/DrawerIconButton"
+import { ToDoScreenProps } from "../navigators/ToDoNavigator"
+import { useStores } from "../models"
+import { CategorySection } from "../components/CategorySection"
+import { AddTaskButton } from "../components/AddTaskButton"
 
-// STOP! READ ME FIRST!
-// To fix the TS error below, you'll need to add the following things in your navigation config:
-// - Add `Home: undefined` to AppStackParamList
-// - Import your screen, and add it to the stack:
-//     `<Stack.Screen name="Home" component={HomeScreen} />`
-// Hint: Look for the 🔥!
+export const isRTL = Localization.isRTL
 
-// REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
-// @ts-ignore
-export const HomeScreen: FC<StackScreenProps<AppStackScreenProps, "Home">> = observer(function HomeScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+const logo = require("../../assets/images/logo.png")
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+interface HomeScreenProps extends ToDoScreenProps<"Home"> {}
+
+export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen() {
+  const [open, setOpen] = useState(false)
+  const drawerRef = useRef<DrawerLayout>()
+  const progress = useSharedValue(0)
+  const menuRef = useRef<FlatList>()
+  const { authenticationStore } = useStores()
+
+  const toggleDrawer = () => {
+    if (!open) {
+      setOpen(true)
+      drawerRef.current?.openDrawer({ speed: 2 })
+    } else {
+      setOpen(false)
+      drawerRef.current?.closeDrawer({ speed: 2 })
+    }
+  }
+
   return (
-    <Screen style={$root} preset="scroll">
-      <Text text="home" />
-    </Screen>
+    <DrawerLayout
+      ref={drawerRef}
+      drawerWidth={326}
+      drawerType={"slide"}
+      drawerPosition={isRTL ? "right" : "left"}
+      drawerBackgroundColor={colors.palette.neutral100}
+      overlayColor={colors.palette.overlay20}
+      onDrawerSlide={(drawerProgress) => {
+        progress.value = open ? 1 - drawerProgress : drawerProgress
+      }}
+      onDrawerStateChanged={(newState: DrawerState, drawerWillShow: boolean) => {
+        if (newState === "Settling") {
+          setOpen(drawerWillShow)
+        }
+      }}
+      renderNavigationView={() => {
+        return (
+          <SafeAreaView style={$drawer} edges={["top"]}>
+            <View style={$logoContainer}>
+              <Image source={logo} style={$logoImage} />
+            </View>
+
+            <FlatList<{ name: string; useCases: string[] }>
+              ref={menuRef}
+              contentContainerStyle={$flatListContentContainer}
+              data={[]}
+              keyExtractor={(item) => item.name}
+              renderItem={({ item, index: sectionIndex }) => <View></View>}
+            />
+          </SafeAreaView>
+        )
+      }}
+    >
+      <Screen
+        preset="fixed"
+        safeAreaEdges={["top", "bottom"]}
+        style={$root}
+        contentContainerStyle={$rootInner}
+      >
+        <DrawerIconButton onPress={toggleDrawer} {...{ open, progress }} />
+        <View style={$content}>
+          <Text
+            tx="homeScreen.title"
+            txOptions={{
+              name: authenticationStore.user.displayName,
+            }}
+            preset="heading"
+          />
+          <CategorySection />
+        </View>
+        <AddTaskButton style={$addButton} />
+      </Screen>
+    </DrawerLayout>
   )
 })
 
 const $root: ViewStyle = {
   flex: 1,
+  backgroundColor: colors.background,
+}
+
+const $rootInner: ViewStyle = {
+  flex: 1,
+}
+
+const $content: ViewStyle = {
+  paddingHorizontal: spacing.large,
+}
+
+const $drawer: ViewStyle = {
+  flex: 1,
+}
+
+const $logoContainer: ViewStyle = {
+  alignSelf: "flex-start",
+  height: 56,
+  paddingHorizontal: spacing.large,
+}
+
+const $logoImage: ImageStyle = {
+  height: 42,
+  width: 77,
+}
+
+const $flatListContentContainer: ViewStyle = {
+  paddingHorizontal: spacing.large,
+}
+
+const $addButton: ViewStyle = {
+  position: "absolute",
+  bottom: 0,
+  right: spacing.large,
 }

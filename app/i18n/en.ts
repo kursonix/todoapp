@@ -10,6 +10,9 @@ const en = {
     readyForLaunch: "Your app, almost ready for launch!",
     exciting: "(ohh, this is exciting!)",
   },
+  homeScreen: {
+    title: "What's up, {{name}}!",
+  },
   errorScreen: {
     title: "Something went wrong!",
     friendlySubtitle:
@@ -22,6 +25,9 @@ const en = {
       content: "No data found yet. Try clicking the button to refresh or reload the app.",
       button: "Let's try this again",
     },
+  },
+  categorySectionComponent: {
+    name: "CATEGORIES",
   },
 }
 
