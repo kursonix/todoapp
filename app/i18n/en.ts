@@ -13,6 +13,14 @@ const en = {
   homeScreen: {
     title: "What's up, {{name}}!",
   },
+  addToDoScreen: {
+    input: {
+      placeholder: "Enter new task",
+    },
+    button: {
+      add: "New task",
+    },
+  },
   errorScreen: {
     title: "Something went wrong!",
     friendlySubtitle:
@@ -28,6 +36,9 @@ const en = {
   },
   categorySectionComponent: {
     name: "CATEGORIES",
+  },
+  buttonCalendar: {
+    currentDay: "Today",
   },
 }
 
