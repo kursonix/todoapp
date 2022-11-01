@@ -15,6 +15,7 @@ import { useStores } from "../models"
 import { CategorySection } from "../components/CategorySection"
 import { AddTaskButton } from "../components/AddTaskButton"
 import { useNavigation } from "@react-navigation/native"
+import { TaskSection } from "../components/TaskSection"
 
 interface HomeScreenProps extends ToDoScreenProps<"Home"> {}
 
@@ -45,6 +46,7 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
               preset="heading"
             />
             <CategorySection />
+            <TaskSection />
           </View>
           <AddTaskButton style={$addButton} onPress={navigateToAddToDo} />
         </Screen>

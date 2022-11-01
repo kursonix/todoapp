@@ -8,7 +8,7 @@ export const UserModel = types
   .props({
     displayName: "",
     email: "",
-    uid: "",
+    uid: types.identifier,
     refreshToken: "",
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
