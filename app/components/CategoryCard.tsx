@@ -32,7 +32,7 @@ export const CategoryCard = observer(function CategoryCard(props: CategoryCardPr
 })
 
 const $container: ViewStyle = {
-  padding: spacing.large,
+  padding: spacing.medium,
 }
 
 const $text: TextStyle = {}

@@ -5,8 +5,8 @@ import { colors, spacing, typography } from "../theme"
 import { Text } from "./Text"
 import { SectionHeader } from "./SectionHeader"
 import { TaskCard } from "./TaskCard"
-import { useEffect } from "react"
-import { useStores } from "../models"
+import { useCallback, useEffect } from "react"
+import { Task, useStores } from "../models"
 
 export interface TaskSectionProps {
   /**
@@ -30,6 +30,10 @@ export const TaskSection = observer(function TaskSection(props: TaskSectionProps
     taskStore.loadTasks(user.uid)
   }, [])
 
+  const onDismiss = useCallback((taskId: string) => {
+    taskStore.removeTask(taskId)
+  }, [])
+
   return (
     <View style={$styles}>
       <View style={$textContainer}>
@@ -37,7 +41,7 @@ export const TaskSection = observer(function TaskSection(props: TaskSectionProps
       </View>
       <View>
         {taskStore.tasks.map((task) => {
-          return <TaskCard task={task} />
+          return <TaskCard key={task.id} style={$taskCard} task={task} onDismiss={onDismiss} />
         })}
       </View>
     </View>
@@ -50,4 +54,8 @@ const $container: ViewStyle = {
 
 const $textContainer: TextStyle = {
   marginTop: spacing.medium,
+}
+
+const $taskCard: ViewStyle = {
+  marginTop: spacing.extraSmall,
 }

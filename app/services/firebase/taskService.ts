@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore"
 import { db } from "../../config/firebase"
 import { Task, TaskSnapshotIn, TaskSnapshotOut } from "../../models"
 
@@ -7,6 +7,10 @@ export class TaskService {
     await addDoc(collection(db, "users", task.user.toString(), "tasks"), {
       ...task,
     })
+  }
+
+  async removeTask(task: Task) {
+    await deleteDoc(doc(db, "users", task.user.uid, "tasks", task.id))
   }
 
   async getTasks(userId: string): Promise<TaskSnapshotIn[]> {

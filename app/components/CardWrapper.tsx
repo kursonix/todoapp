@@ -27,7 +27,7 @@ export const CardWrapper = observer(function CardWrapper(props: CardWrapperProps
 
 const $container: ViewStyle = {
   backgroundColor: colors.cardBackground,
-  borderRadius: 35,
+  borderRadius: 20,
   shadowColor: "#000",
   shadowOffset: {
     width: 0,
