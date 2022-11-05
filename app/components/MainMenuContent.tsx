@@ -1,12 +1,12 @@
+import { FontAwesome5 } from "@expo/vector-icons"
+import { useNavigation } from "@react-navigation/native"
 import * as React from "react"
-import { FlatList, ImageStyle, StyleProp, TextStyle, View, ViewStyle, Image } from "react-native"
-import { observer } from "mobx-react-lite"
-import { colors, spacing, typography } from "../theme"
-import { Text } from "./Text"
 import { useRef } from "react"
+import { FlatList, ImageStyle, StyleProp, View, ViewStyle } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-
-const logo = require("../../assets/images/logo.png")
+import { colors, spacing } from "../theme"
+import { Button } from "./Button"
+import { Text } from "./Text"
 
 export interface AppMenuProps {
   /**
@@ -22,32 +22,33 @@ export const MainMenuContent = function MainMenuContent(props: AppMenuProps) {
   const { style } = props
   const $styles = [$container, style]
   const menuRef = useRef<FlatList>()
+  const navigation = useNavigation<any>()
+
+  const navigateToCategories = () => {
+    navigation.navigate("Category", { screen: "Categories" })
+  }
 
   return (
-    <SafeAreaView style={$drawer} edges={["top"]}>
+    <SafeAreaView style={$styles} edges={["top", "bottom"]}>
       <View style={$logoContainer}>
-        <Image source={logo} style={$logoImage} />
+        <Text tx="mainMenu.appName" preset="heading" />
       </View>
-
-      <FlatList<{ name: string; useCases: string[] }>
-        ref={menuRef}
-        contentContainerStyle={$flatListContentContainer}
-        data={[]}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item, index: sectionIndex }) => <View></View>}
-      />
+      <View style={$menu}>
+        <Button
+          LeftAccessory={(props) => <FontAwesome5 {...props} name="bell" color="white" size="20" />}
+          tx="mainMenu.categories"
+          preset="outline"
+          onPress={navigateToCategories}
+        ></Button>
+      </View>
     </SafeAreaView>
   )
 }
 
 const $container: ViewStyle = {
-  justifyContent: "center",
-}
-
-const $text: TextStyle = {
-  fontFamily: typography.primary.normal,
-  fontSize: 14,
-  color: colors.palette.primary500,
+  flex: 1,
+  backgroundColor: colors.cardBackground,
+  padding: spacing.extraLarge,
 }
 
 const $logoContainer: ViewStyle = {
@@ -56,9 +57,7 @@ const $logoContainer: ViewStyle = {
   paddingHorizontal: spacing.large,
 }
 
-const $drawer: ViewStyle = {
-  flex: 1,
-}
+const $menu: ViewStyle = {}
 
 const $logoImage: ImageStyle = {
   height: 42,

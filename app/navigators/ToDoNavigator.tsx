@@ -1,11 +1,14 @@
+import { NavigatorScreenParams } from "@react-navigation/native"
 import { createStackNavigator, StackScreenProps } from "@react-navigation/stack"
 import React from "react"
 import { HomeScreen } from "../screens"
 import { AddToDoScreen } from "../screens/AddToDoScreen"
+import { CategoryNavigator, CategoryNavigatorParamList } from "./CategoryNavigator"
 
 export type ToDoNavigatorParamList = {
   Home: undefined
   AddToDo: undefined
+  Category: NavigatorScreenParams<CategoryNavigatorParamList>
 }
 
 export type ToDoScreenProps<T extends keyof ToDoNavigatorParamList> = StackScreenProps<
@@ -21,6 +24,7 @@ export const ToDoNavigator = () => {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="AddToDo" component={AddToDoScreen} />
+      <Stack.Screen name="Category" component={CategoryNavigator} />
     </Stack.Navigator>
   )
 }

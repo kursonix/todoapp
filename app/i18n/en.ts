@@ -43,6 +43,18 @@ const en = {
   buttonCalendar: {
     currentDay: "Today",
   },
+  mainMenu: {
+    appName: "ToDoApp",
+    categories: "Categories",
+  },
+  addCategoryScreen: {
+    button: {
+      add: "New category",
+    },
+    input: {
+      placeholder: "Enter new category",
+    },
+  },
 }
 
 export default en

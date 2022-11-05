@@ -1,48 +1,60 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { StyleProp, TextStyle, ViewStyle } from "react-native"
-import { colors, spacing } from "../theme"
-import { CardWrapper } from "./CardWrapper"
-import { ProgressBar } from "./ProgressBar"
+import { TextStyle, View, ViewStyle } from "react-native"
+import { PanGestureHandlerProps } from "react-native-gesture-handler"
+import { Category } from "../models/Category"
+import { colors, spacing, typography } from "../theme"
+import { RemovableCard } from "./RemovableCard"
 import { Text } from "./Text"
 
-export interface CategoryCardProps {
+export interface CategoryCardProps extends Pick<PanGestureHandlerProps, "simultaneousHandlers"> {
   /**
-   * An optional style override useful for padding & margin.
+   * Category data
    */
-  style?: StyleProp<ViewStyle>
+  category: Category
+  /**
+   * On dismiss callback
+   */
+  onDismiss: (categoryId: string) => void
 }
 
 /**
  * Describe your component here
  */
 export const CategoryCard = observer(function CategoryCard(props: CategoryCardProps) {
-  const { style } = props
-  const $styles = [$container, style]
+  const { simultaneousHandlers, onDismiss, category } = props
+
+  const hanleOnDimiss = () => {
+    onDismiss(category.id)
+  }
 
   return (
-    <CardWrapper style={$styles}>
-      <Text style={$secondaryText} size="xs">
-        40 Tasks
-      </Text>
-      <Text size="md" preset="bold">
-        Business
-      </Text>
-      <ProgressBar style={$progressBar} />
-    </CardWrapper>
+    <RemovableCard simultaneousHandlers={simultaneousHandlers} onDismiss={hanleOnDimiss}>
+      <View style={$category}>
+        <View style={[$colorIndicator, { backgroundColor: category.color }]}></View>
+        <Text style={$text} size="md">
+          {category.name}
+        </Text>
+      </View>
+    </RemovableCard>
   )
 })
 
-const $container: ViewStyle = {
-  padding: spacing.medium,
+const $text: TextStyle = {
+  fontFamily: typography.primary.normal,
+  fontSize: 14,
+  color: colors.text,
+  flexShrink: 1,
 }
 
-const $text: TextStyle = {}
-
-const $secondaryText: TextStyle = {
-  color: colors.palette.primary300,
+const $category: ViewStyle = {
+  flexDirection: "row",
+  alignItems: "center",
 }
 
-const $progressBar: ViewStyle = {
-  marginTop: spacing.medium,
+const $colorIndicator: ViewStyle = {
+  width: 25,
+  height: 25,
+  borderRadius: 90,
+  marginRight: spacing.medium,
 }

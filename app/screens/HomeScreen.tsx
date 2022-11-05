@@ -27,6 +27,7 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
           safeAreaEdges={["top", "bottom"]}
           style={$root}
           contentContainerStyle={$rootInner}
+          statusBarStyle="light"
         >
           <MainMenuActionButton />
           <View style={$content}>

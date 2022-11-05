@@ -62,7 +62,6 @@ export const TaskSection = observer(function TaskSection(props: TaskSectionProps
             return (
               <TaskCard
                 key={task.id}
-                style={$taskCard}
                 task={task}
                 onDismiss={onDismiss}
                 simultaneousHandlers={scrollRef}
@@ -87,10 +86,6 @@ const $textContainer: TextStyle = {
 
 const $icon: ViewStyle = {
   marginLeft: spacing.tiny,
-}
-
-const $taskCard: ViewStyle = {
-  marginTop: spacing.extraSmall,
 }
 
 const $tasksWrapper: ViewStyle = {
