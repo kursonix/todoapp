@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { ScrollView, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { spacing } from "../theme"
 import { CategoryCard } from "./CategoryCard"
 import { SectionHeader } from "./SectionHeader"
@@ -24,10 +24,10 @@ export const CategorySection = observer(function CategorySection(props: Category
       <View style={$textContainer}>
         <SectionHeader tx="categorySectionComponent.name"></SectionHeader>
       </View>
-      <View style={$categoryList}>
+      <ScrollView style={$categoryList} horizontal>
         <CategoryCard style={$category} />
         <CategoryCard style={$category} />
-      </View>
+      </ScrollView>
     </View>
   )
 })

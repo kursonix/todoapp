@@ -1,7 +1,6 @@
-import React from "react"
 import { createStackNavigator, StackScreenProps } from "@react-navigation/stack"
-import { HomeScreen, WelcomeScreen } from "../screens"
-import { CompositeScreenProps } from "@react-navigation/native"
+import React from "react"
+import { HomeScreen } from "../screens"
 import { AddToDoScreen } from "../screens/AddToDoScreen"
 
 export type ToDoNavigatorParamList = {
