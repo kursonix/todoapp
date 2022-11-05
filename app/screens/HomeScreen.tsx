@@ -1,21 +1,13 @@
-import React, { FC, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { FlatList, View, ViewStyle, Image, ImageStyle } from "react-native"
-import { StackScreenProps } from "@react-navigation/stack"
-import { AppStackScreenProps } from "../navigators"
+import React, { FC } from "react"
+import { View, ViewStyle } from "react-native"
 import { MainMenu, MainMenuActionButton, MainMenuWrapper, Screen, Text } from "../components"
-import { DrawerLayout, DrawerState } from "react-native-gesture-handler"
-import * as Localization from "expo-localization"
-import { colors, spacing } from "../theme"
-import { useSharedValue } from "react-native-reanimated"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { DrawerIconButton } from "../components/DrawerIconButton"
-import { ToDoScreenProps } from "../navigators/ToDoNavigator"
-import { useStores } from "../models"
-import { CategorySection } from "../components/CategorySection"
 import { AddTaskButton } from "../components/AddTaskButton"
-import { useNavigation } from "@react-navigation/native"
+import { CategorySection } from "../components/CategorySection"
 import { TaskSection } from "../components/TaskSection"
+import { useStores } from "../models"
+import { ToDoScreenProps } from "../navigators/ToDoNavigator"
+import { colors, spacing } from "../theme"
 
 interface HomeScreenProps extends ToDoScreenProps<"Home"> {}
 
@@ -43,7 +35,8 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
               txOptions={{
                 name: authenticationStore.user.displayName,
               }}
-              preset="heading"
+              preset="bold"
+              size="xl"
             />
             <CategorySection />
             <TaskSection />
@@ -66,10 +59,11 @@ const $rootInner: ViewStyle = {
 
 const $content: ViewStyle = {
   paddingHorizontal: spacing.large,
+  flex: 1,
 }
 
 const $addButton: ViewStyle = {
   position: "absolute",
-  bottom: 0,
+  bottom: spacing.large,
   right: spacing.large,
 }

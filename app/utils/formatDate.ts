@@ -1,9 +1,9 @@
-import { Locale, format, parseISO } from "date-fns"
+import { format, Locale, parseISO } from "date-fns"
 import I18n from "i18n-js"
 
 import ar from "date-fns/locale/ar-SA"
-import ko from "date-fns/locale/ko"
 import en from "date-fns/locale/en-US"
+import ko from "date-fns/locale/ko"
 
 type Options = Parameters<typeof format>[2]
 

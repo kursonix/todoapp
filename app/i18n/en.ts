@@ -37,6 +37,9 @@ const en = {
   categorySectionComponent: {
     name: "CATEGORIES",
   },
+  taskSectionComponent: {
+    name: "TODAY'S TASKS",
+  },
   buttonCalendar: {
     currentDay: "Today",
   },

@@ -1,15 +1,8 @@
-import * as React from "react"
-import { Platform, StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
-import { Button } from "./Button"
-import Ionicons from "@expo/vector-icons/MaterialCommunityIcons"
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { useMemo, useState } from "react"
-import { formatDate } from "../utils/formatDate"
-import { translate } from "../i18n"
-import { ButtonCalendar } from "./ButtonCalendar"
+import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { useState } from "react"
+import { StyleProp, View, ViewStyle } from "react-native"
 
 export interface DatePickerProps {
   /**
@@ -24,13 +17,17 @@ export interface DatePickerProps {
    * Date change handler.
    */
   onChange: (dates: Date) => void
+  /**
+   * Presable component
+   */
+  pressableCompoent: (value: Date, toogle: () => void) => React.ReactNode
 }
 
 /**
  * Date picker componenet
  */
 export const DatePicker = observer(function DatePicker(props: DatePickerProps) {
-  const { style, value, onChange } = props
+  const { style, value, onChange, pressableCompoent } = props
   const $styles = [$container, style]
   const [show, setShow] = useState(false)
 
@@ -46,7 +43,7 @@ export const DatePicker = observer(function DatePicker(props: DatePickerProps) {
 
   return (
     <View style={$styles}>
-      <ButtonCalendar date={value} onPress={tooglePicker} />
+      {pressableCompoent(value, tooglePicker)}
       {show && (
         <DateTimePicker
           testID="dateTimePicker"

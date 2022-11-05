@@ -1,3 +1,4 @@
+import type { AuthCredential } from "@firebase/auth"
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { Alert, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
@@ -5,11 +6,10 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import { Button, Text } from "../components"
 import useGoogleAuthentication from "../hooks/useGoogleAuthentication"
 import { isRTL } from "../i18n"
+import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { authenticationService } from "../services/firebase/authenticationService"
 import { colors, spacing } from "../theme"
-import type { AuthCredential } from "@firebase/auth"
-import { useStores } from "../models"
 
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")

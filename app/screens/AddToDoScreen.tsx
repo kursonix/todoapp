@@ -1,19 +1,18 @@
-import React, { FC, useState } from "react"
+import Icon from "@expo/vector-icons/FontAwesome5"
 import { observer } from "mobx-react-lite"
-import { ActivityIndicator, TextInput, View, ViewStyle } from "react-native"
+import React, { FC, useState } from "react"
+import { ActivityIndicator, Keyboard, View, ViewStyle } from "react-native"
 import {
   Button,
+  ButtonCalendar,
   DatePicker,
   Header,
   Screen,
-  Text,
-  TextField,
   TextFieldNoBorders,
 } from "../components"
+import { useStores } from "../models"
 import { ToDoScreenProps } from "../navigators/ToDoNavigator"
 import { colors, spacing } from "../theme"
-import Icon from "@expo/vector-icons/FontAwesome5"
-import { useStores } from "../models"
 
 interface AddToScreenProps extends ToDoScreenProps<"AddToDo"> {}
 
@@ -52,7 +51,20 @@ export const AddToDoScreen: FC<AddToScreenProps> = observer(function AddToDoScre
             placeholderTx="addToDoScreen.input.placeholder"
             multiline={true}
           />
-          <DatePicker style={$datePicker} value={date} onChange={setDate} />
+          <DatePicker
+            style={$datePicker}
+            value={date}
+            onChange={setDate}
+            pressableCompoent={(value, toogle) => (
+              <ButtonCalendar
+                date={value}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  toogle()
+                }}
+              />
+            )}
+          />
         </View>
         <Button
           onPress={onAddTask}
@@ -79,7 +91,7 @@ const $root: ViewStyle = {
 
 const $content: ViewStyle = {
   paddingHorizontal: spacing.large,
-  paddingBottom: spacing.medium,
+  paddingBottom: spacing.large,
   flex: 1,
   justifyContent: "space-between",
 }

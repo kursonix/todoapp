@@ -1,10 +1,10 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, spacing, typography } from "../theme"
-import { Text } from "./Text"
+import * as React from "react"
+import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { colors, spacing } from "../theme"
 import { CardWrapper } from "./CardWrapper"
 import { ProgressBar } from "./ProgressBar"
+import { Text } from "./Text"
 
 export interface CategoryCardProps {
   /**
@@ -22,8 +22,10 @@ export const CategoryCard = observer(function CategoryCard(props: CategoryCardPr
 
   return (
     <CardWrapper style={$styles}>
-      <Text style={$secondaryText}>40 Tasks</Text>
-      <Text size="xl" preset="bold">
+      <Text style={$secondaryText} size="xs">
+        40 Tasks
+      </Text>
+      <Text size="md" preset="bold">
         Business
       </Text>
       <ProgressBar style={$progressBar} />

@@ -1,10 +1,9 @@
+import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { colors, spacing, typography } from "../theme"
-import { Text } from "./Text"
-import { SectionHeader } from "./SectionHeader"
+import { spacing } from "../theme"
 import { CategoryCard } from "./CategoryCard"
+import { SectionHeader } from "./SectionHeader"
 
 export interface CategorySectionProps {
   /**
@@ -39,13 +38,13 @@ const $container: ViewStyle = {
 
 const $categoryList: ViewStyle = {
   flexDirection: "row",
+  marginTop: spacing.medium,
 }
 
 const $category: ViewStyle = {
-  marginTop: spacing.small,
   marginRight: spacing.small,
 }
 
 const $textContainer: TextStyle = {
-  marginTop: spacing.medium,
+  marginTop: spacing.large,
 }

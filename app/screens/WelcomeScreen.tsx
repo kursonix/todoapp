@@ -1,10 +1,9 @@
-import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
+import React, { FC } from "react"
 import { ViewStyle } from "react-native"
-import { StackScreenProps } from "@react-navigation/stack"
-import { AppStackScreenProps } from "../navigators"
 import { Screen, Text } from "../components"
 import { useStores } from "../models"
+import { AppStackScreenProps } from "../navigators"
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen() {

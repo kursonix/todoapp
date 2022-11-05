@@ -1,4 +1,5 @@
-import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { flow, Instance, SnapshotIn, SnapshotOut, types, getSnapshot } from "mobx-state-tree"
+import { taskService } from "../services/firebase/taskService"
 import { setupRootStore } from "./helpers/setupRootStore"
 import { User, UserModel } from "./User"
 
@@ -25,6 +26,10 @@ export const TaskModel = types
     setUser(user: User) {
       self.user = user
     },
+    setStatus: flow(function* setStatus(status: boolean) {
+      yield taskService.setTaskStatus(self.id, self.user.uid, status)
+      self.done = status
+    }),
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export interface Task extends Instance<typeof TaskModel> {}

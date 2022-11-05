@@ -8,6 +8,7 @@ import { useMemo } from "react"
 import { formatDate } from "../utils/formatDate"
 import Ionicons from "@expo/vector-icons/MaterialCommunityIcons"
 import { translate } from "../i18n"
+import { isToday } from "date-fns"
 
 export interface ButtonCalendarProps extends ButtonProps {
   /**
@@ -29,8 +30,7 @@ export const ButtonCalendar = function ButtonCalendar(props: ButtonCalendarProps
 
   const formatedDate = useMemo(() => {
     const selected = formatDate(date.toISOString())
-    const current = formatDate(new Date().toISOString())
-    return selected === current ? translate("buttonCalendar.currentDay") : selected
+    return isToday(date) ? translate("buttonCalendar.currentDay") : selected
   }, [date])
 
   return (

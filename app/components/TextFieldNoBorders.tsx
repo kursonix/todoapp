@@ -1,10 +1,9 @@
-import * as React from "react"
-import { StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text, TextProps } from "./Text"
+import * as React from "react"
+import { StyleProp, TextInput, TextInputProps, TextStyle } from "react-native"
 import { translate } from "../i18n"
-import { Button } from "./Button"
+import { colors, typography } from "../theme"
+import { TextProps } from "./Text"
 
 export interface TextFieldNoBordersProps extends Omit<TextInputProps, "ref"> {
   /**
@@ -39,6 +38,6 @@ export const TextFieldNoBorders = observer(function TextFieldNoBorders(
 
 const $text: TextStyle = {
   fontFamily: typography.primary.normal,
-  fontSize: 26,
+  fontSize: 25,
   color: colors.text,
 }

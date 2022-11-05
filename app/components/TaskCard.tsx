@@ -1,11 +1,12 @@
-import * as React from "react"
-import { Dimensions, StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { FontAwesome5 } from "@expo/vector-icons"
 import { observer } from "mobx-react-lite"
-import { colors, spacing, typography } from "../theme"
-import { Text } from "./Text"
-import { CardWrapper } from "./CardWrapper"
-import { Task } from "../models"
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler"
+import * as React from "react"
+import { Dimensions, StyleProp, TextStyle, ViewStyle } from "react-native"
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+  PanGestureHandlerProps,
+} from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
@@ -13,15 +14,18 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
-import { FontAwesome5 } from "@expo/vector-icons"
+import { Task } from "../models"
+import { colors, spacing, typography } from "../theme"
+import { TaskDoneButton } from "./TaskDoneButton"
+import { Text } from "./Text"
 
 const TASK_CARD_HEIGHT = 60
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window")
 
-const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3
+const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.2
 
-export interface TaskCardProps {
+export interface TaskCardProps extends Pick<PanGestureHandlerProps, "simultaneousHandlers"> {
   /**
    * An optional style override useful for padding & margin.
    */
@@ -39,8 +43,8 @@ export interface TaskCardProps {
 /**
  * Task item
  */
-export const TaskCard = function TaskCard(props: TaskCardProps) {
-  const { style, task, onDismiss } = props
+export const TaskCard = observer(function TaskCard(props: TaskCardProps) {
+  const { style, task, onDismiss, simultaneousHandlers } = props
   const $styles = [$container, style]
   const translateX = useSharedValue(0)
   const itemHeight = useSharedValue(TASK_CARD_HEIGHT)
@@ -90,28 +94,38 @@ export const TaskCard = function TaskCard(props: TaskCardProps) {
     }
   })
 
+  const $taskText = [$text, task.done && $textTaskDone]
+
+  const setTaskStatus = (value: boolean) => {
+    task.setStatus(value)
+  }
+
   return (
     <Animated.View style={[$styles, rTaskContainerStyle]}>
-      <Animated.View style={[$iconContainer, rIconContainerStyle]}>
-        <FontAwesome5 name="trash-alt" size={TASK_CARD_HEIGHT * 0.4} color={"red"} />
+      <Animated.View style={$iconWrapper}>
+        <Animated.View style={[$iconContainer, rIconContainerStyle]}>
+          <FontAwesome5 name="trash-alt" size={TASK_CARD_HEIGHT * 0.4} color={"red"} />
+        </Animated.View>
       </Animated.View>
-      <PanGestureHandler onGestureEvent={panGesture}>
+      <PanGestureHandler simultaneousHandlers={simultaneousHandlers} onGestureEvent={panGesture}>
         <Animated.View style={[$task, rStyle]}>
-          <Text style={$text} size="md">
+          <TaskDoneButton value={task.done} setValue={setTaskStatus} />
+          <Text style={$taskText} size="md">
             {task.task}
           </Text>
         </Animated.View>
       </PanGestureHandler>
     </Animated.View>
   )
-}
+})
 
 const $container: ViewStyle = {
   justifyContent: "center",
 }
 
 const $task: ViewStyle = {
-  justifyContent: "center",
+  flexDirection: "row",
+  alignItems: "center",
   height: TASK_CARD_HEIGHT,
   backgroundColor: colors.cardBackground,
   borderRadius: 20,
@@ -122,6 +136,11 @@ const $text: TextStyle = {
   fontFamily: typography.primary.normal,
   fontSize: 14,
   color: colors.text,
+  flexShrink: 1,
+}
+
+const $textTaskDone: TextStyle = {
+  textDecorationLine: "line-through",
 }
 
 const $iconContainer: ViewStyle = {
@@ -131,4 +150,12 @@ const $iconContainer: ViewStyle = {
   right: "5%",
   justifyContent: "center",
   alignItems: "center",
+}
+
+const $iconWrapper: ViewStyle = {
+  backgroundColor: colors.palette.neutral100,
+  position: "absolute",
+  height: TASK_CARD_HEIGHT,
+  width: "100%",
+  borderRadius: 20,
 }
