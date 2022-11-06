@@ -10,8 +10,10 @@ import {
   Screen,
   TextFieldNoBorders,
 } from "../components"
+import { CategoryPicker } from "../components/CategoryPicker"
 import { Loader } from "../components/Loader"
 import { useStores } from "../models"
+import { Category } from "../models/Category"
 import { ToDoScreenProps } from "../navigators/ToDoNavigator"
 import { colors, spacing } from "../theme"
 
@@ -21,6 +23,7 @@ export const AddToDoScreen: FC<AddToScreenProps> = observer(function AddToDoScre
   const { navigation } = _props
   const [date, setDate] = useState(new Date())
   const [task, setTask] = useState("")
+  const [category, setCategory] = useState<Category>()
   const [loading, setLoading] = useState(false)
   const {
     taskStore,
@@ -63,20 +66,27 @@ export const AddToDoScreen: FC<AddToScreenProps> = observer(function AddToDoScre
               placeholderTx="addToDoScreen.input.placeholder"
               multiline={true}
             />
-            <DatePicker
-              style={$datePicker}
-              value={date}
-              onChange={setDate}
-              pressableCompoent={(value, toogle) => (
-                <ButtonCalendar
-                  date={value}
-                  onPress={() => {
-                    Keyboard.dismiss()
-                    toogle()
-                  }}
-                />
-              )}
-            />
+            <View style={$buttonsWrapper}>
+              <DatePicker
+                style={$datePicker}
+                value={date}
+                onChange={setDate}
+                pressableCompoent={(value, toogle) => (
+                  <ButtonCalendar
+                    date={value}
+                    onPress={() => {
+                      Keyboard.dismiss()
+                      toogle()
+                    }}
+                  />
+                )}
+              />
+              <CategoryPicker
+                style={$categoryPicker}
+                value={category}
+                onCategorySelected={setCategory}
+              />
+            </View>
           </View>
           <Button
             onPress={onAddTask}
@@ -115,5 +125,15 @@ const $form: ViewStyle = {
 }
 
 const $datePicker: ViewStyle = {
+  // marginTop: spacing.extraLarge,
+}
+
+const $buttonsWrapper: ViewStyle = {
   marginTop: spacing.extraLarge,
+  flexDirection: "row",
+  alignItems: "center",
+}
+
+const $categoryPicker: ViewStyle = {
+  marginLeft: spacing.extraLarge,
 }

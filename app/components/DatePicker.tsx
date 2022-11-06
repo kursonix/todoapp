@@ -48,7 +48,6 @@ export const DatePicker = observer(function DatePicker(props: DatePickerProps) {
         <DateTimePicker
           testID="dateTimePicker"
           value={value}
-          display={"inline"}
           mode={"date"}
           onChange={onDateChange}
           textColor="white"

@@ -2,11 +2,11 @@ import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { PanGestureHandlerProps } from "react-native-gesture-handler"
+import { useCategoryColor } from "../hooks/useCategoryColor"
 import { Task } from "../models"
-import { colors, typography } from "../theme"
+import { colors, spacing, typography } from "../theme"
 import { RemovableCard } from "./RemovableCard"
-import { TaskDoneButton } from "./TaskDoneButton"
-import { Text } from "./Text"
+import { Toggle } from "./Toggle"
 
 export interface TaskCardProps extends Pick<PanGestureHandlerProps, "simultaneousHandlers"> {
   /**
@@ -27,25 +27,38 @@ export const TaskCard = observer(function TaskCard(props: TaskCardProps) {
 
   const $taskText = [$text, task.done && $textTaskDone]
 
-  const setTaskStatus = (value: boolean) => {
-    task.setStatus(value)
+  const setTaskStatus = () => {
+    task.setStatus(!task.done)
   }
 
   const hanleOnDimiss = () => {
     onDismiss(task.id)
   }
 
+  const { color } = useCategoryColor(task.category)
+
   return (
     <RemovableCard simultaneousHandlers={simultaneousHandlers} onDismiss={hanleOnDimiss}>
       <View style={$task}>
-        <TaskDoneButton value={task.done} setValue={setTaskStatus} />
-        <Text style={$taskText} size="md">
-          {task.task}
-        </Text>
+        <Toggle
+          containerStyle={$toogle}
+          variant="radio"
+          value={task.done}
+          onPress={setTaskStatus}
+          label={task.task}
+          labelStyle={$taskText}
+          inputOuterStyle={{
+            borderColor: color,
+          }}
+        />
       </View>
     </RemovableCard>
   )
 })
+
+const $toogle: ViewStyle = {
+  marginRight: spacing.medium,
+}
 
 const $text: TextStyle = {
   fontFamily: typography.primary.normal,
@@ -58,7 +71,4 @@ const $textTaskDone: TextStyle = {
   textDecorationLine: "line-through",
 }
 
-const $task: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-}
+const $task: ViewStyle = {}

@@ -1,6 +1,6 @@
-import { flow, Instance, SnapshotIn, SnapshotOut, types, getSnapshot } from "mobx-state-tree"
+import { flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { taskService } from "../services/firebase/taskService"
-import { setupRootStore } from "./helpers/setupRootStore"
+import { CategoryModel } from "./Category"
 import { User, UserModel } from "./User"
 
 /**
@@ -14,6 +14,7 @@ export const TaskModel = types
     date: new Date(),
     done: false,
     user: types.maybe(types.reference(types.late(() => UserModel))),
+    category: types.maybe(types.reference(types.late(() => CategoryModel))),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
