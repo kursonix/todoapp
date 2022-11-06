@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, TextStyle, ViewStyle } from "react-native"
+import { CategorySummary } from "../models"
 import { colors, spacing } from "../theme"
 import { CardWrapper } from "./CardWrapper"
 import { ProgressBar } from "./ProgressBar"
@@ -11,6 +12,10 @@ export interface CategoryProgressCardProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  /**
+   * Data about category like no of tasks, category name, tasks done
+   */
+  categorySummary: CategorySummary
 }
 
 /**
@@ -19,18 +24,21 @@ export interface CategoryProgressCardProps {
 export const CategoryProgressCard = observer(function CategoryProgressCard(
   props: CategoryProgressCardProps,
 ) {
-  const { style } = props
+  const { style, categorySummary } = props
   const $styles = [$container, style]
 
   return (
     <CardWrapper style={$styles}>
       <Text style={$secondaryText} size="xs">
-        40 Tasks
+        {categorySummary.taskCount} Tasks
       </Text>
       <Text size="md" preset="bold">
-        Business
+        {categorySummary.name}
       </Text>
-      <ProgressBar style={$progressBar} />
+      <ProgressBar
+        style={$progressBar}
+        progress={categorySummary.tasksDone / categorySummary.taskCount}
+      />
     </CardWrapper>
   )
 })

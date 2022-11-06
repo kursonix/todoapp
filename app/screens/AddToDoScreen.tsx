@@ -12,7 +12,7 @@ import {
 } from "../components"
 import { CategoryPicker } from "../components/CategoryPicker"
 import { Loader } from "../components/Loader"
-import { useStores } from "../models"
+import { TaskSnapshotIn, useStores } from "../models"
 import { Category } from "../models/Category"
 import { ToDoScreenProps } from "../navigators/ToDoNavigator"
 import { colors, spacing } from "../theme"
@@ -35,11 +35,13 @@ export const AddToDoScreen: FC<AddToScreenProps> = observer(function AddToDoScre
       return
     }
     setLoading(true)
-    await taskStore.addTask({
+    const taskIn: TaskSnapshotIn = {
       task,
       date,
       user: user.uid,
-    })
+    }
+    category && (taskIn.category = category.id)
+    await taskStore.addTask(taskIn)
     setLoading(false)
     navigation.goBack()
   }

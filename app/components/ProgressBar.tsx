@@ -1,28 +1,31 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
-import { colors, typography } from "../theme"
-import { Text } from "./Text"
+import * as React from "react"
+import { StyleProp, View, ViewStyle } from "react-native"
 import * as Progress from "react-native-progress"
+import { colors } from "../theme"
 
 export interface ProgressBarProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  /**
+   * How much progress is filled
+   */
+  progress: number
 }
 
 /**
  * Describe your component here
  */
 export const ProgressBar = observer(function ProgressBar(props: ProgressBarProps) {
-  const { style } = props
+  const { style, progress } = props
   const $styles = [$container, style]
 
   return (
     <View style={$styles}>
       <Progress.Bar
-        progress={0.3}
+        progress={progress}
         width={200}
         color={colors.palette.accent500}
         unfilledColor={colors.palette.primary100}

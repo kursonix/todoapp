@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { PanGestureHandlerProps } from "react-native-gesture-handler"
 import { useCategoryColor } from "../hooks/useCategoryColor"
 import { Task } from "../models"
@@ -37,24 +37,45 @@ export const TaskCard = observer(function TaskCard(props: TaskCardProps) {
 
   const { color } = useCategoryColor(task.category)
 
+  let $toggleOuterStyle = [$toggleOuter, { borderColor: color }, task.done && $toggleOuterChecked]
+
   return (
     <RemovableCard simultaneousHandlers={simultaneousHandlers} onDismiss={hanleOnDimiss}>
       <View style={$task}>
         <Toggle
           containerStyle={$toogle}
-          variant="radio"
+          variant="checkbox"
           value={task.done}
           onPress={setTaskStatus}
           label={task.task}
           labelStyle={$taskText}
-          inputOuterStyle={{
-            borderColor: color,
-          }}
+          inputInnerStyle={$toggleInner}
+          inputDetailStyle={$toggleDetails}
+          inputOuterStyle={$toggleOuterStyle as ViewStyle}
         />
       </View>
     </RemovableCard>
   )
 })
+
+const $toggleInner: ViewStyle = {
+  backgroundColor: colors.palette.secondary300,
+}
+
+const $toggleDetails: ViewStyle & ImageStyle = {
+  tintColor: colors.palette.neutral100,
+}
+
+const $toggleOuter: ViewStyle = {
+  borderRadius: 90,
+  backgroundColor: colors.cardBackground,
+  width: 30,
+  height: 30,
+}
+
+const $toggleOuterChecked: ViewStyle = {
+  borderColor: colors.cardBackground,
+}
 
 const $toogle: ViewStyle = {
   marginRight: spacing.medium,

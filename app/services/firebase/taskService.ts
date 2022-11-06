@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -17,7 +18,6 @@ export class TaskService {
     const docRef = await addDoc(collection(db, "users", task.user.toString(), "tasks"), {
       ...task,
     })
-
     return docRef.id
   }
 
@@ -32,6 +32,7 @@ export class TaskService {
       tasksRef,
       where("date", ">=", startOfDay(date)),
       where("date", "<=", endOfDay(date)),
+      orderBy("date", "desc"),
     )
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach((doc) => {

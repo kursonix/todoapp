@@ -14,7 +14,13 @@ export const TaskModel = types
     date: new Date(),
     done: false,
     user: types.maybe(types.reference(types.late(() => UserModel))),
-    category: types.maybe(types.reference(types.late(() => CategoryModel))),
+    category: types.maybeNull(
+      types.reference(CategoryModel, {
+        onInvalidated(ev) {
+          ev.removeRef()
+        },
+      }),
+    ),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({

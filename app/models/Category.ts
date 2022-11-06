@@ -9,6 +9,7 @@ export const CategoryModel = types
     id: types.identifier,
     name: "",
     color: "",
+    createdAt: new Date(),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

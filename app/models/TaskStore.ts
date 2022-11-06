@@ -1,19 +1,15 @@
-import {
-  Instance,
-  SnapshotIn,
-  SnapshotOut,
-  types,
-  getSnapshot,
-  destroy,
-  flow,
-} from "mobx-state-tree"
-import { taskService } from "../services/firebase/taskService"
-import { Task, TaskModel, TaskSnapshotIn } from "./Task"
-import uuid from "react-native-uuid"
-import { v1 as uuidv1, v4 as uuidv4, v3 as uuidv3, v5 as uuidv5 } from "uuid"
-import { withSetPropAction } from "./helpers/withSetPropAction"
-import { values } from "mobx"
 import { endOfDay, startOfDay } from "date-fns"
+import { destroy, flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { taskService } from "../services/firebase/taskService"
+import { colors } from "../theme"
+import { Category } from "./Category"
+import { withSetPropAction } from "./helpers/withSetPropAction"
+import { TaskModel, TaskSnapshotIn } from "./Task"
+
+export interface CategorySummary extends Category {
+  taskCount: number
+  tasksDone: number
+}
 
 /**
  * Task collections.
@@ -30,18 +26,53 @@ export const TaskStoreModel = types
       )
       return tasks
     },
+    get categories() {
+      const categoriesResult = self.tasks.reduce((previousValue, currentValue) => {
+        if (!currentValue.category) {
+          if (previousValue.has("NONE")) {
+            const value = previousValue.get("NONE")
+            value.taskCount++, currentValue.done && value.tasksDone++
+          } else {
+            previousValue.set("NONE", {
+              id: "NONE",
+              color: colors.palette.neutral900,
+              name: "None",
+              createdAt: new Date(),
+              taskCount: 1,
+              tasksDone: currentValue.done ? 1 : 0,
+            })
+          }
+          return previousValue
+        }
+        if (previousValue.has(currentValue.category.id)) {
+          const value = previousValue.get(currentValue.category.id)
+          value.taskCount++, currentValue.done && value.tasksDone++
+        } else {
+          previousValue.set(currentValue.category.id, {
+            ...currentValue.category,
+            taskCount: 1,
+            tasksDone: currentValue.done ? 1 : 0,
+          })
+        }
+        return previousValue
+      }, new Map<string, CategorySummary>())
+      return Array.from(categoriesResult.values()).sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+      )
+    },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(withSetPropAction)
   .actions((self) => ({
     async loadTasks(userId: string, date: Date) {
       const tasks = await taskService.getTasks(userId, date)
+      console.log(tasks)
       self.setProp("tasks", tasks)
     },
   }))
   .actions((self) => ({
     addTask: flow(function* addTask(task: TaskSnapshotIn) {
       const taskId = yield taskService.addTask(task)
-      self.tasks.push({ id: taskId, ...task })
+      self.tasks.unshift({ id: taskId, ...task })
     }),
     removeTask: flow(function* removeTask(taskId: string) {
       const task = self.tasks.find((ele) => ele.id === taskId)

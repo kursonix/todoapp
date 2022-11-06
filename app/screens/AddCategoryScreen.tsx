@@ -32,6 +32,7 @@ export const AddCategoryScreen: FC<AddCategoryScreenProps> = observer(function A
       {
         name: categoryName,
         color,
+        createdAt: new Date(),
       },
       user.uid,
     )

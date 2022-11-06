@@ -1,6 +1,8 @@
-import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore"
 import { db } from "../../config/firebase"
 import { CategorySnapshotIn } from "../../models/Category"
+
+export const DEFAULT_CATEGORY_REF = "DEFAULT_CATEGORY_REF"
 
 export class CategoryService {
   async addCategory(category: CategorySnapshotIn, userId: string) {
@@ -14,11 +16,13 @@ export class CategoryService {
   async getCategories(userId: string) {
     const categories: CategorySnapshotIn[] = []
     const categoriesRef = collection(db, "users", userId, "categories")
-    const querySnapshot = await getDocs(categoriesRef)
+    const q = query(categoriesRef, orderBy("createdAt", "desc"))
+    const querySnapshot = await getDocs(q)
     querySnapshot.forEach((doc) => {
       categories.push({
         ...doc.data(),
         id: doc.id,
+        createdAt: doc.data().createdAt.toDate(),
       } as CategorySnapshotIn)
     })
     return categories

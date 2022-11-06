@@ -22,7 +22,7 @@ export const CategoryStoreModel = types
   .actions((self) => ({
     addCategory: flow(function* addCategory(category: CategorySnapshotIn, userId: string) {
       const categoryId = yield categoryService.addCategory(category, userId)
-      self.categories.push({ id: categoryId, ...category })
+      self.categories.unshift({ id: categoryId, ...category })
     }),
     removeCategory: flow(function* removeCategory(categoryId: string, userId: string) {
       const category = self.categories.find((ele) => ele.id === categoryId)
